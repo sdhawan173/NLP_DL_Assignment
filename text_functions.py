@@ -475,7 +475,7 @@ def word2vec_nn(data, data_labels, word2vec_model, verbose_boolean=False):
     return accuracy, precision, recall, f1
 
 
-def w2v_nn_testing(data, data_labels, max_vector_size, verbose_boolean=False):
+def w2v_nn_testing(data, data_labels, max_vector_size):
     print('Running Neural Network for vector sizes from 1 to {}'.format(max_vector_size))
     size_list = [i + 1 for i in range(max_vector_size)]
     accuracy_list = []
