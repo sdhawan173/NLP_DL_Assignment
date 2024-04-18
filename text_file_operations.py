@@ -1,4 +1,6 @@
 import os
+import time
+import pickle as pkl
 
 PWD = os.getcwd()
 
@@ -54,3 +56,49 @@ def save_data(data_list, dst_string):
             for item in line:
                 line_string += item + ' '
             file.write(line_string + '\n')
+
+
+def parse_translations(translation_file_name):
+    english_list = []
+    eng_labels = []
+    span_labels = []
+    spanish_list = []
+    translations = {}
+    pkl_boolean = False
+    for file_name in next(os.walk(os.getcwd() + '/'))[2]:
+        if file_name == 'translation_vars.pkl':
+            pkl_boolean = True
+    if pkl_boolean:
+        print('.pkl file found! :D')
+        english_list, eng_labels, spanish_list, span_labels, translations = pkl.load(open('translation_vars.pkl', 'rb'))
+    if pkl_boolean is False:
+        print('.pkl file not found :(')
+
+        print('Parsing translations ...')
+        start = time.time()
+        with open(translation_file_name, 'r') as file:
+            for line in file:
+                pair = line.split('\tCC-BY 2.0')[0]
+                english = pair.split('\t')[0]
+                spanish = pair.split('\t')[1]
+
+                if english not in english_list:
+                    english_list.append(english)
+                    eng_labels.append('english')
+                if spanish not in spanish_list:
+                    spanish_list.append(spanish)
+                    span_labels.append('spanish')
+
+                if english in translations:
+                    translations[english].append(spanish)
+                elif english not in translations:
+                    translations[english] = [spanish]
+        end = time.time()
+        total = '{:.4f}'.format(end - start)
+        print('Time to parse: {}'.format(total))
+        pkl.dump(
+            (english_list, eng_labels, spanish_list, span_labels, translations),
+            open('translation_vars.pkl', 'wb')
+        )
+        print('translations.pkl saved to {}'.format(os.getcwd()))
+    return english_list, eng_labels, spanish_list, span_labels, translations

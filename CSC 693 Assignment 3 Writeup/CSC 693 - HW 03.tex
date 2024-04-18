@@ -1,0 +1,119 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{float} % Add the float package for H specifier
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\usepackage{listings}
+\lstset{
+basicstyle=\small\ttfamily,
+columns=flexible,
+breaklines=true
+}
+\begin{document}
+\onecolumn
+\title{CSC 693 - HW 3 - Deep Learning}
+\author{Sahil Dhawan}
+\maketitle
+\section{Sentiment Analysis}
+\par \noindent Sentiment analysis is the process of analyzing text to determine the emotional tone. Use all the 2,000 comments in Dataset1 as the corpus, and choose related python libraries to finish the following tasks.
+
+\subsection{Part 1)}
+\par \noindent In Assignment2, you developed a neural network classifier C1 with the pre-trained word embedding model, now develop a new neural network classifier C2 without loading pre-trained word embeddings. Compare C2 and C1, which one has better performance? Try to discuss it. (Requirements: you developed three classifiers in Assignment2, pick the best one as C1. Make sure C1 and C2 are trained and evaluated with the same training, validation and testing sets).\\
+
+\begin{itemize}
+\item C1 Settings: word2vec CBOW with \verb"vector_size=100, window=5, min_count=1"
+\item C2 Settings: No pretrained word embeddings, words were tokenzied with Tokenizer from tensorflow.keras.preprocessing.text and pad\textunderscore sequence from tensorflow.keras.preprocessing.sequence
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        C1 vs C2 & C1 & C2 \\
+        \hline
+        Accuracy  & 0.7800 & 0.5050 \\
+        Precision & 0.7849 & 0.4167 \\
+        Recall    & 0.7526 & 0.0515 \\
+        F1        & 0.7684 & 0.0917 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+C1 has better performance because of using pretrained word embeddings. Tokenizing words on their own to use as input to the neural network is not effective.
+
+\subsection{Part 2)}
+\par \noindent Train three classifiers with RNN, LSTM and GRU respectively under the same settings, and output the classification reports (tip: you can use sklearn.metrics.classification\textunderscore freport). Which classifier has better performance? Compare their time cost, which one is faster? (Requirement: Use \textbf{Pytorch} for this problem. Clearly specify the dataset division, hyperparameters and other required settings in your report)
+
+\begin{multicols}{2}
+\begin{itemize}
+\item Hyperparameters:
+\begin{itemize}
+\item Learning Rate = 0.001
+\item Batch Size = 64
+\item 50 Epochs
+\item 15 Hidden Layers
+\item Adam Optimizer
+\item BCELoss with Sigmoid Layer
+\end{itemize}
+\end{itemize}
+\columnbreak
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|c|}
+        \hline
+        \makecell{Test Data\\ Evaluation} & RNN & LSTM & GRU \\
+        \hline
+        Accuracy  	  & 77.50\% & 79,00\% & 76.50\% \\
+        Precision 	  & 75.49\% & 77.78\% & 77.17\% \\
+        Recall        & 79.38\% & 79.38\% & 73.20\% \\
+        F1       	  & 77.39\% & 78.57\% & 75.13\% \\
+        Runtime (sec) & 7.5873 & 3.2012 & 15.6563 \\
+        \hline
+    \end{tabular}
+\end{table}
+\end{multicols}
+Word embeddings were passed in as input data with the same settings as for C1 in Part 1/Assignment 2. The data was split into 80\% training, 10\% validation, and 10\% testing. All three classifiers have nearly identical performance with LSTM having the highest accuracy, precision, and F1 score and RNN and LSTM having the same highest recall value. LSTM has the fastest compute time, followed by RNN and GRU.
+
+\subsection{Part 3)}
+\par \noindent Build a bidirectional 3-layer stacked LSTM model, compared to your LSTM model in the last question, which one has better classification results? Why?
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|c|c|}
+        \hline
+        \makecell{Test Data\\ Evaluation} & LSTM & BD 3LS LSTM \\
+        \hline
+        Accuracy  	  & 79,00\% & 79.00\% \\
+        Precision 	  & 77.78\% & 77.23\% \\
+        Recall        & 79.38\% & 80.41\% \\
+        F1       	  & 78.57\% & 78.79\% \\
+        Runtime (sec) & 3.2012  & 5.8805 \\
+        \hline
+    \end{tabular}
+\end{table}
+Both models have similar results, but the bidirectional 3-layer stacked LSTM has a better recall.
+\newpage
+\section{Text Translation}
+\par \noindent Machine translation is the process of automatically translating content from one language to another without any human input. Given the English-Spanish dataset2, build a machine translator using TensorFlow. (The format of the dataset is English + TAB + Spanish + TAB + CC-BY License + Attribution. You can basically ignore the license and attribution, only focus on the columns of English and Spanish.)
+\subsection{Part 1)}
+\par \noindent Prepossess the dataset and split the dataset into training, validation and testing subsets by the ratio 70/15/15.\\
+
+The data was parsed and passed into a .pkl file after the first parse to load in easier on each test run. Each entry of an english or spanish word was respectively matched with an 'english' or 'spanish' label as it was appended to the appropriate list.
+
+\subsection{Part 2)}
+\par \noindent Train the translator with Transformer method, report the classification results. What does the hyperparameter “num\textunderscore heads” mean? Why do we need this mechanism?
+
+\subsection{Part 3)}
+\par \noindent What is the translation result for the sentence “Deep Learning is widely used in Natural Language Processing, as Dr. Sun said in CSC 495/693.” with your translator? Plot the heatmap of the encoder-decoder attention scores.
+
+\end{document}
