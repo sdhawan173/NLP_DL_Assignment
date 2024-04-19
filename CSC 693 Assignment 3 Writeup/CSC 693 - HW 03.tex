@@ -83,7 +83,9 @@ C1 has better performance because of using pretrained word embeddings. Tokenizin
     \end{tabular}
 \end{table}
 \end{multicols}
-Word embeddings were passed in as input data with the same settings as for C1 in Part 1/Assignment 2. The data was split into 80\% training, 10\% validation, and 10\% testing. All three classifiers have nearly identical performance with LSTM having the highest accuracy, precision, and F1 score and RNN and LSTM having the same highest recall value. LSTM has the fastest compute time, followed by RNN and GRU.
+\par Word embeddings were passed in as input data with the same settings as for C1 in Part 1/Assignment 2. The data was split into 80\% training, 10\% validation, and 10\% testing. All three classifiers have nearly identical performance with LSTM having the highest accuracy, precision, and F1 score and RNN and LSTM having the same highest recall value. LSTM has the fastest compute time, followed by RNN and GRU. Because the data set of 2000 comments is relatively small for a deep learning architecture, the similarity in evaluation scores could be due to underfitting.
+\par The architecture of RNN is similar to short-term memory, so gradients which are too small or too large can cause vanishing gradient or exploding gradient problems. Exploding gradients especially can become a problem because it can cause the classification to become biased.
+\par LSTM's architecture resemebles a combination of short and long-term memory. GRU is a simplified variation of LSTM which has update and reset gates instead of an output gate and combines the cell and hidden state per each unit. Ideally, LSTM should have the best evaluation scores in addition to compute time because of its inclusion of cell states and hidden states which are passed into a sigmoid layer to determine if the values are important to keep or not.
 
 \subsection{Part 3)}
 \par \noindent Build a bidirectional 3-layer stacked LSTM model, compared to your LSTM model in the last question, which one has better classification results? Why?
@@ -101,17 +103,21 @@ Word embeddings were passed in as input data with the same settings as for C1 in
         \hline
     \end{tabular}
 \end{table}
-Both models have similar results, but the bidirectional 3-layer stacked LSTM has a better recall.
-\newpage
+Both models have similar results, but the bidirectional 3-layer stacked LSTM has a better recall. It is expected that bidirectional 3-layer stacked LSTM should perform better due to performing in two directions: "past" and "future", creating a more comprehensive long and short term memory context of the data set.\\
+
+\par \textbf{post-answer update:} \textit{I noticed my code for rnn, lstm, and gru did not include hidden or cell state in the function definition when the type\textunderscore name variable was set to 'lstm', and I could not get hidden and cell state to work correctly in the bidirectional 3-layer stacked LSTM, so the code did not use those variables.}
+
 \section{Text Translation}
 \par \noindent Machine translation is the process of automatically translating content from one language to another without any human input. Given the English-Spanish dataset2, build a machine translator using TensorFlow. (The format of the dataset is English + TAB + Spanish + TAB + CC-BY License + Attribution. You can basically ignore the license and attribution, only focus on the columns of English and Spanish.)
 \subsection{Part 1)}
-\par \noindent Prepossess the dataset and split the dataset into training, validation and testing subsets by the ratio 70/15/15.\\
+\par \noindent Prepossess the dataset and split the dataset into training, validation and testing subsets by the ratio 70/15/15. The english and spanish parsed lists each were length 118,629.\\
 
 The data was parsed and passed into a .pkl file after the first parse to load in easier on each test run. Each entry of an english or spanish word was respectively matched with an 'english' or 'spanish' label as it was appended to the appropriate list.
 
 \subsection{Part 2)}
-\par \noindent Train the translator with Transformer method, report the classification results. What does the hyperparameter “num\textunderscore heads” mean? Why do we need this mechanism?
+\par \noindent Train the translator with Transformer method, report the classification results. What does the hyperparameter “num\textunderscore heads” mean? Why do we need this mechanism?\\
+
+num\textunderscore heads is the number of times the self-attention mechanism is applied in parallel with different sets of learned parameters. Multi-head attention analyzes relationships between different input elements "simultaneously".
 
 \subsection{Part 3)}
 \par \noindent What is the translation result for the sentence “Deep Learning is widely used in Natural Language Processing, as Dr. Sun said in CSC 495/693.” with your translator? Plot the heatmap of the encoder-decoder attention scores.

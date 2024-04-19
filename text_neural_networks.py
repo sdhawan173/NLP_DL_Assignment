@@ -167,7 +167,7 @@ def split_data(data, data_labels, train_test_size, test_val_size=0.5):
             random_state=666
         )
     )
-    return training_data, testing_data, training_labels, testing_labels, validation_data, testing_data, validation_labels, testing_labels
+    return training_data, training_labels, validation_data, testing_data, validation_labels, testing_labels
 
 
 def classifier(data, data_labels, word2vec_model, type_name, epochs=50, batch_size=64, learning_rate=0.001):
